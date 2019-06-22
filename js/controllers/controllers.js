@@ -216,7 +216,8 @@ appModule
                         var novo = {
                             cod: produto["COD"],
                             name: produto["NOME"],
-                            dueValue: produto["TOTAL"]
+                            dueValue: produto["TOTAL"],
+                            active: produto["ATIVO"]
                         }
                         scope.dataList.push(novo);
                     });
@@ -279,6 +280,14 @@ appModule
                     swal("Não foi possível cadastrar o fornecedor, verifique os dados!");
                 }, 100);
             });
+        }
+
+        scope.setSelected = function(fornecedor) {
+            scope.selected = fornecedor;
+        }
+
+        scope.inativarFornecedor = function() {
+            console.log("IMPLEMENTAR INATIVAR FORNECEDOR"); //TODO
         }
 
     }])
@@ -353,7 +362,7 @@ appModule
 
     }])
 
-    .controller('cash-controller', ['ngTableParams', '$scope', '$rootScope', '$location', 'CarregarMovimentos', function(ngTableParams, scope, rootScope, location, carregarMovimentos) {
+    .controller('cash-controller', ['ngTableParams', '$scope', '$rootScope', '$location', 'CarregarMovimentos', 'RegistrarMovimento', function(ngTableParams, scope, rootScope, location, carregarMovimentos, registrarMovimento) {
 
         if(window.localStorage.getItem("usuario") == null) {
             location.path("/login");
@@ -369,11 +378,12 @@ appModule
                 } else {
 
                     scope.dataList = [];
-                    angular.forEach(data.msg, function(produto) {
+                    angular.forEach(data.data, function(produto) {
                         var novoProduto = {
                             cod: produto["COD"],
                             data: produto["DATA"],
                             tipo: produto["TIPO"],
+                            descricao: produto["DESCRICAO"],
                             valor: produto["VALOR_TOTAL"]
                         }
                         scope.dataList.push(novoProduto);
@@ -388,6 +398,39 @@ appModule
         }
 
         carregarMovimentacoes();
+
+        var adicionarMovimento = function() {
+
+            registrarMovimento.post({data: JSON.stringify(scope.newMovement)}, function(data) {
+                setTimeout(function() {
+                    if(data.erro == '1') {
+                        swal("Não foi possível registrar o produto! " + (data.msg ? data.msg : ""));
+                    } else {
+                        scope.closeDialogModal('dialogCreateNew');
+                        scope.dataList = [];
+                        carregarMovimentacoes();
+                        swal("Inserido com sucesso");
+                    }
+                    
+                }, 100);
+            }, function(response){
+                setTimeout(function() {
+                    swal("Não foi possível registrar o movimento, verifique os dados!");
+                }, 100);
+            });
+        }
+
+        scope.createManualMovement = function() {
+
+            if(!scope.isPositive) {
+                scope.newMovement.valor = - scope.newMovement.valor;
+                scope.newMovement.tipo = 1;
+            } else {
+                scope.newMovement.tipo = 2;
+            }
+
+            adicionarMovimento();
+        }
 
         var criarTabela = function () {
             scope.listPage = scope.dataList;
@@ -429,14 +472,18 @@ appModule
             });
         }
 
-        scope.openDialogCreateNew = function(){
-            scope.isNewContractDefinition = true;
+        scope.openDialogCreateNew = function(isPositive){
+            scope.isPositive = isPositive;
             cleanDialogCreateFields();
             modalDialog.show('dialogCreateNew');
         }
 
+        scope.closeDialogModal = function(id){
+            modalDialog.hide(id);
+        }
+
         var cleanDialogCreateFields = function() {
-            console.log("Implementar cleanDialogCreateFields");
+            scope.newMovement = {};
         }    
 
     }])

@@ -31,15 +31,7 @@
  });
 
  // connect to database
- dbConn.connect(); 
-
- // Retrieve all users 
- app.get('/users', function (req, res) {
-     dbConn.query('SELECT * FROM USUARIO', function (error, results, fields) {
-         if (error) throw error;
-         return res.send({ error: false, data: results, message: 'users list.' });
-     });
- });
+ dbConn.connect();  
 
  // Retrieve user with id 
  app.get('/user/:id', function (req, res) {
@@ -170,6 +162,32 @@
      }
 
     dbConn.query("INSERT INTO FORNECEDOR SET ? ", fornecedor, function (error, results, fields) {
+      if (error) throw error;
+        return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
+      });
+ });
+
+ app.get('/listar-movimentos', function (req, res) {
+     dbConn.query('SELECT * FROM MOVIMENTO m', function (error, results, fields) {
+         if (error) throw error;
+         return res.send({ error: false, data: results, message: 'users list.' });
+     });
+ });
+
+ app.post('/movimento', function (req, res) {
+     let movimento = JSON.parse(req.body.data);
+
+     if (!movimento) {
+       return res.status(400).send({ error:true, message: 'Please provide user' });
+     }
+
+    var param = {};
+    param["VALOR_TOTAL"] = movimento.valor;
+    param["DATA"] = new Date();
+    param["TIPO"] = movimento.tipo;
+    param["DESCRICAO"] = movimento.descricao;
+
+    dbConn.query("INSERT INTO MOVIMENTO SET ? ", param, function (error, results, fields) {
       if (error) throw error;
         return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
       });

@@ -31,10 +31,13 @@
                                     <td data-title="'Data'">
                                         <span>{{ w.data }}</span>
                                     </td>
+                                    <td data-title="'Descricao'">
+                                        <span>{{w.descricao}}</span>
+                                    </td>
                                     <td data-title="'Tipo'">
                                         <span ng-if="w.tipo == 0">Venda</span>
                                         <span ng-if="w.tipo == 1">Retirada</span>
-                                        <span ng-if="w.tipo == 2">Depósito</span>
+                                        <span ng-if="w.tipo == 2">Suprimento</span>
                                     </td>
                                     <td data-title="'Valor'">
                                         <span>{{ w.valor | currency : "R$ " : 2 }}</span>
@@ -59,7 +62,8 @@
 
                         <div class="drop-card-bottom">
                             <div class="bottom-buttons">
-                                <button class="btn bgm-blue" ng-click="openDialogCreateNew()">Retirar</button>
+                                <button class="btn bgm-blue" ng-click="openDialogCreateNew(true)">Inserir</button>
+                                <button class="btn bgm-red" ng-click="openDialogCreateNew(false)">Retirar</button>
                                 <!-- <button ng-if="dataList.length > 0" class="btn bgm-green" ng-click="openUpdateProductDialog(selectedContractDetached)">Editar</button> -->
                                 <!-- <button ng-if="dataList.length > 0" class="btn bgm-red" ng-click="removeProduct(selectedContractDetached)">Inativar</button> -->
                             </div>
@@ -70,22 +74,34 @@
                 <div class="modalDialog" id="dialogCreateNew">
                     <div class="modalDialogBox">
                         <div class="modalDialogContent">
-                            <h2>Retirada de Dinheiro</h2>
+                            <h2 ng-if="isPositive">Movimentaçao de entrada</h2>
+                            <h2 ng-if="!isPositive">Movimentaçao de saída</h2>
 
-                            <div class="col-sm-6" >                                
-                                <div class="form-group fg-line">                            
-                                    <label class="f-500 c-black">Valor</label>
-                                    <input type="value" class="select-text form-control fg-input text-right" id="inputValue">
-                                </div>
-                            </div>                            
+                            <div class="col-sm-12">
+                                <div class="col-sm-3" >                                
+                                    <div class="form-group fg-line">                            
+                                        <label class="f-500 c-black" >Descricao</label>
+                                        <input type="text" class="form-control fg-input text-right" id="inputDescription" ng-model="newMovement.descricao">
+                                    </div>
+                                </div>     
+                            </div>             
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-3" >                                
+                                    <div class="form-group fg-line">                            
+                                        <label class="f-500 c-black" >Valor</label>
+                                        <input type="number" class="form-control fg-input text-right" id="inputValue" ng-model="newMovement.valor">
+                                    </div>
+                                </div>     
+                            </div>             
+                          
                             <div class="col-sm-12 bottom-buttons">
-                                <button ng-if="isNewContractDefinition" ng-click="openUpdateContractDefinitionDialog()" class="btn bgm-green btn-icon-text"><i class="zmdi zmdi-edit"></i> Retirada</button> 
-                                <button ng-click="closeDialogModal('updateContractDialog')" class="btn bgm-orange btn-icon-text"><i class="zmdi zmdi-close"></i> Cancelar</button>
+                                <button ng-click="createManualMovement()" class="btn bgm-green btn-icon-text"><i class="zmdi zmdi-edit"></i> Salvar</button> 
+                                <button ng-click="closeDialogModal('dialogCreateNew')" class="btn bgm-orange btn-icon-text"><i class="zmdi zmdi-close"></i> Cancelar</button>
                             </div>
                         </div>
                     </div>  
                 </div>
-
             </div>
         </div>  
     </div>
