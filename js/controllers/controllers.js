@@ -18,7 +18,6 @@ appModule
             }
 
             validarLogin.post({usuario: scope.user, senha: scope.password}, function(data) {
-                debugger;
                 if(data.erro || data.data.length == 0) {
                     swal(data.msg);
                 } else {
@@ -76,7 +75,7 @@ appModule
                 } else {
 
                     scope.dataList = [];
-                    angular.forEach(data.msg, function(produto) {
+                    angular.forEach(data.data, function(produto) {
                         var novoProduto = {
                             cod: produto["COD"],
                             nome: produto["NOME"],
@@ -148,12 +147,12 @@ appModule
                         'produtos': scope.tableDataList
                     }
 
-                    efetuarVenda.post({data: JSON.stringify(params)}, null, function(data) {
+                    efetuarVenda.post({data: JSON.stringify(params)}, function(data) {
                         setTimeout(function() {
                             if(data.erro == '1') {
                                 swal("Não foi possível efetuar a venda! " + (data.msg ? data.msg : ""));
                             } else {
-                                swal(data.msg);
+                                swal(data.data);
                                 scope.tableDataList = [];
                                 scope.valorTotal = 0;
                             }
@@ -213,7 +212,7 @@ appModule
                     swal("Não foi possível carregar a lista de produtos!");
                 } else {
                     scope.dataList = [];
-                    angular.forEach(data.msg, function(produto) {
+                    angular.forEach(data.data, function(produto) {
                         var novo = {
                             cod: produto["COD"],
                             name: produto["NOME"],
@@ -262,8 +261,9 @@ appModule
             }
 
             var params = scope.novoFornecedor;
+            console.log(scope.novoFornecedor);
 
-            cadastrarFornecedor.post({data: JSON.stringify(params)}, null, function(data) {
+            cadastrarFornecedor.post({data: JSON.stringify(params)}, function(data) {
                 setTimeout(function() {
                     if(data.erro == '1') {
                         swal("Não foi possível cadastrar o fornecedor! " + (data.msg ? data.msg : ""));
@@ -331,8 +331,6 @@ appModule
         scope.registrarProduto = function() {
             var params = scope.novoProduto;
 
-            debugger;
-
             registrarProduto.post({data: JSON.stringify(params)}, function(data) {
                 setTimeout(function() {
                     if(data.erro == '1') {
@@ -345,7 +343,6 @@ appModule
                     
                 }, 100);
             }, function(response){
-                debugger;
                 setTimeout(function() {
                     swal("Não foi possível registrar o produto, verifique os dados!");
                 }, 100);

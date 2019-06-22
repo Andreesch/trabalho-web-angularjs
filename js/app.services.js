@@ -59,7 +59,7 @@ edServices.factory('ListarEstoque', ['$resource', function(resource) {
 }]);
 
 edServices.factory('ListarFornecedores', ['$resource', function(resource) {
-	return resource(domainURL + '/listar-fornecedores.php', null, {
+	return resource(domainURL + '/fornecedores', null, {
 		get: { method:'GET'}
 	});
 }]);
@@ -71,7 +71,7 @@ edServices.factory('RegistrarUsuario', ['$resource', function(resource) {
 }]);
 
 edServices.factory('EfetuarVenda', ['$resource', function(resource) {
-	return resource(domainURL + '/efetuar-venda.php', {data: '@data'}, {
+	return resource(domainURL + '/efetuar-venda', {data: '@data'}, {
 		post: { method:'POST'}
 	});
 }]);
@@ -83,7 +83,7 @@ edServices.factory('RegistrarProduto', ['$resource', function(resource) {
 }]);
 
 edServices.factory('CadastrarFornecedor', ['$resource', function(resource) {
-	return resource(domainURL + '/cadastrar-fornecedor.php', {data: '@data'}, {
+	return resource(domainURL + '/fornecedor', {data: '@data'}, {
 		post: { method:'POST'}
 	});
 }]);

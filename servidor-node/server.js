@@ -136,10 +136,44 @@
       });
  });
 
- // cod: produto["COD"],
- // nome: produto["NOME"],
- // fornecedor: produto["FORNECEDOR"],
- // valor: produto["VALOR_VENDA"]
+
+ // Retrieve all users 
+ app.get('/fornecedores', function (req, res) {
+     dbConn.query('SELECT * FROM FORNECEDOR', function (error, results, fields) {
+         if (error) throw error;
+         return res.send({ error: false, data: results, message: 'users list.' });
+     });
+ });
+
+
+ // Add a new user  
+ app.post('/fornecedor', function (req, res) {
+     let fornecedor = JSON.parse(req.body.data);
+
+     if (!fornecedor) {
+       return res.status(400).send({ error:true, message: 'Please provide user' });
+     }
+
+    dbConn.query("INSERT INTO FORNECEDOR SET ? ", fornecedor, function (error, results, fields) {
+      if (error) throw error;
+        return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
+      });
+ });
+
+
+ // Add a new user  
+ app.post('/efetuar-venda', function (req, res) {
+     let fornecedor = JSON.parse(req.body.data);
+
+     if (!fornecedor) {
+       return res.status(400).send({ error:true, message: 'Please provide user' });
+     }
+
+    dbConn.query("INSERT INTO FORNECEDOR SET ? ", fornecedor, function (error, results, fields) {
+      if (error) throw error;
+        return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
+      });
+ });
 
  //  Delete user
  app.delete('/user', function (req, res) {
