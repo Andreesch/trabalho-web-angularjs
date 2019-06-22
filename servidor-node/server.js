@@ -79,10 +79,18 @@
        return res.status(400).send({ error:true, message: 'Por favor, informe os dados de login!' });
      }
 
-    dbConn.query("SELECT cod FROM USUARIO u WHERE u.LOGIN = ? AND u.SENHA = ? ", {login, password}, function (error, results, fields) {
-       if (error) throw error;
-         return res.send({ error: false, data: results, message: 'Usuário encontrado com sucesso.' });
-         });
+    dbConn.query("SELECT u.COD FROM USUARIO u WHERE u.USUARIO = ? AND u.SENHA = ? ", [{usuario: user.usuario},{senha: user.senha}], function (error, results, fields) {
+       if (error){
+          throw error;
+       } 
+
+       console.log(results);
+
+       let successMessage = 'Usuário encontrado com sucesso';
+       let notFoundMessage = 'Usuário não encontrado. Verifique suas credenciais e tente novamente';
+         
+        return res.send({ error: false, data: results, msg: results.length > 0 ? successMessage : notFoundMessage});
+      });
  });
 
  //  Update user with id

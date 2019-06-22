@@ -17,9 +17,9 @@ appModule
                 return;
             }
 
-            validarLogin.get({usuario: scope.user, senha: scope.password}, function(data) {
+            validarLogin.post({usuario: scope.user, senha: scope.password}, function(data) {
                 debugger;
-                if(data.erro == "1") {
+                if(data.erro || data.data.length == 0) {
                     swal(data.msg);
                 } else {
                     window.localStorage.setItem("usuario", scope.user);
@@ -27,7 +27,7 @@ appModule
                     location.path("/sales");
                 }
             }, function(error) {
-                swal("Não foi possível efetuar o cadastro: " + error);
+                swal("Não foi possível efetuar o login: " + error);
             });
         }
 
