@@ -63,9 +63,25 @@
        return res.status(400).send({ error:true, message: 'Please provide user' });
      }
 
-    dbConn.query("INSERT INTO USUARIO SET ? ", {...user, data: "2019-01-01"}, function (error, results, fields) {
+    dbConn.query("INSERT INTO USUARIO SET ? ", {usuario: user}, function (error, results, fields) {
        if (error) throw error;
          return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
+         });
+ });
+
+  // Validar usuário  
+ app.post('/validar-login', function (req, res) {
+     let user = req.body;
+
+     console.log(user);
+
+     if (!user) {
+       return res.status(400).send({ error:true, message: 'Por favor, informe os dados de login!' });
+     }
+
+    dbConn.query("SELECT cod FROM USUARIO u WHERE u.LOGIN = ? AND u.SENHA = ? ", {login, password}, function (error, results, fields) {
+       if (error) throw error;
+         return res.send({ error: false, data: results, message: 'Usuário encontrado com sucesso.' });
          });
  });
 

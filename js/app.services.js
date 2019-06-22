@@ -91,7 +91,7 @@ edServices.factory('CarregarMovimentos', ['$resource', function(resource) {
 
 
 edServices.factory('ValidarLogin', ['$resource', function(resource) {
-	return resource(domainURL + '/validar-login.php', null, {
+	return resource(domainURL + '/validar-login', null, {
 		get: { method:'GET'}
 	});
 }]);

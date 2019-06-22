@@ -27,7 +27,7 @@ angular.module('materialAdmin').run(['$templateCache', function($templateCache) 
 
 
   $templateCache.put('template/header.html',
-    "<ul class=\"header-inner clearfix\"><li id=\"menu-trigger\" data-target=\"mainmenu\" data-toggle-sidebar data-model-left=\"mactrl.sidebarToggle.left\" data-ng-class=\"{ 'open': mactrl.sidebarToggle.left === true }\"><div class=\"line-wrap\"><div class=\"line top\"></div><div class=\"line center\"></div><div class=\"line bottom\"></div></div></li><li class=\"logo hidden-xs\"><a data-ui-sref=\"home\" data-ng-click=\"mactrl.sidebarStat($event)\">SigVendas</a></li><li class=\"pull-right\"><ul class=\"top-menu\"><!-- <li id=\"toggle-width\">\n" +
+    "<ul class=\"header-inner clearfix\"><li id=\"menu-trigger\" data-target=\"mainmenu\" data-toggle-sidebar data-model-left=\"mactrl.sidebarToggle.left\" data-ng-class=\"{ 'open': mactrl.sidebarToggle.left === true }\"><div class=\"line-wrap\"><div class=\"line top\"></div><div class=\"line center\"></div><div class=\"line bottom\"></div></div></li><li class=\"logo hidden-xs\"><a data-ui-sref=\"home\" data-ng-click=\"mactrl.sidebarStat($event)\">TABAKANA</a></li><li class=\"pull-right\"><ul class=\"top-menu\"><!-- <li id=\"toggle-width\">\n" +
     "                <div class=\"toggle-switch\">\n" +
     "                    <input id=\"tw-switch\" type=\"checkbox\" hidden=\"hidden\" data-change-layout=\"mactrl.layoutType\">\n" +
     "                    <label for=\"tw-switch\" class=\"ts-helper\"></label>\n" +
