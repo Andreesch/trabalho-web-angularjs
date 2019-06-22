@@ -519,7 +519,7 @@ appModule
 
     }])
 
-   .controller('stock-controller', ['ngTableParams', '$scope', '$rootScope', '$location', function(ngTableParams, scope, rootScope, location) {
+   .controller('stock-controller', ['ngTableParams', '$scope', '$rootScope', '$location', 'ListarEstoque', function(ngTableParams, scope, rootScope, location, listarEstoque) {
     
         if(window.localStorage.getItem("usuario") == null) {
             location.path("/login");
@@ -528,18 +528,21 @@ appModule
 
         scope.selected = null;
         scope.novoFornecedor = {};
+        scope.selectedProdutCod = null;
 
         var carregarEstoque = function() { 
             listarEstoque.get(null, function(data) {
                 if(data.erro == '1') {
                     swal("Não foi possível carregar o estoque de produtos!");
                 } else {
+                    debugger;
                     scope.dataList = [];
-                    angular.forEach(data.msg, function(produto) {
+                    angular.forEach(data.data, function(produto) {
                         var novo = {
                             cod: produto["COD"],
                             name: produto["NOME"],
-                            dueValue: produto["TOTAL"]
+                            qtd: produto["QTD"],
+                            update: produto["ATUALIZACAO"]
                         }
                         scope.dataList.push(novo);
                     });
@@ -549,7 +552,7 @@ appModule
             });
         }
 
-        carregarFornecedores();
+        carregarEstoque();
 
         scope.closeDialogModal = function(id){
             modalDialog.hide(id);
@@ -571,37 +574,37 @@ appModule
             console.log("Implementar cleanDialogCreateFields");
         }
 
-        scope.cadastrarFornecedor = function() {
+        // scope.cadastrarFornecedor = function() {
 
-            if(!validarCPF(scope.novoFornecedor.cpf)) {
-                swal("CPF Inválido!");
-                return;
-            }
+        //     if(!validarCPF(scope.novoFornecedor.cpf)) {
+        //         swal("CPF Inválido!");
+        //         return;
+        //     }
 
-            if(!validarTelefone(scope.novoFornecedor.telefone)) {
-                swal("Telefone Inválido!");
-                return;
-            }
+        //     if(!validarTelefone(scope.novoFornecedor.telefone)) {
+        //         swal("Telefone Inválido!");
+        //         return;
+        //     }
 
-            var params = scope.novoFornecedor;
+        //     var params = scope.novoFornecedor;
 
-            cadastrarFornecedor.post({data: JSON.stringify(params)}, null, function(data) {
-                setTimeout(function() {
-                    if(data.erro == '1') {
-                        swal("Não foi possível cadastrar o fornecedor! " + (data.msg ? data.msg : ""));
-                    } else {
-                        swal(data.msg);
-                        scope.closeDialogModal('dialogCreateNew');
-                        carregarFornecedores();
-                    }
+        //     cadastrarFornecedor.post({data: JSON.stringify(params)}, null, function(data) {
+        //         setTimeout(function() {
+        //             if(data.erro == '1') {
+        //                 swal("Não foi possível cadastrar o fornecedor! " + (data.msg ? data.msg : ""));
+        //             } else {
+        //                 swal(data.msg);
+        //                 scope.closeDialogModal('dialogCreateNew');
+        //                 carregarFornecedores();
+        //             }
                     
-                }, 100);
-            }, function(response){
-                setTimeout(function() {
-                    swal("Não foi possível cadastrar o fornecedor, verifique os dados!");
-                }, 100);
-            });
-        }
+        //         }, 100);
+        //     }, function(response){
+        //         setTimeout(function() {
+        //             swal("Não foi possível cadastrar o fornecedor, verifique os dados!");
+        //         }, 100);
+        //     });
+        // }
 
     }])
 

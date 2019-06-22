@@ -29,13 +29,13 @@
                                         <span>{{ w.cod }}</span>
                                     </td>
                                     <td data-title="'Nome'">
-                                        <span>{{ w.nome }}</span>
+                                        <span>{{ w.name }}</span>
                                     </td>
-                                    <td data-title="'Fornecedor'">
-                                        <span>{{ w.fornecedor }}</span>
+                                    <td data-title="'Quantidade'">
+                                        <span>{{ w.qtd }}</span>
                                     </td>
-                                    <td data-title="'Valor'">
-                                        <span>{{ w.valor | currency : "R$ " : 2 }}</span>
+                                    <td data-title="'Última atualização'">
+                                        <span>{{ w.update | date: 'dd/MM/yy HH:mm' }}</span>
                                     </td>
 
                                    <!--  <td data-title="'Foto'">
@@ -54,7 +54,7 @@
                         </div>
                         
                         <div ng-if="dataList.length == 0 && !loading" class="table-message">
-                            <p>Nenhum produto cadastrado</p>
+                            <p>Nenhum produto no estoque cadastrado</p>
                         </div>
 
                         <div class="drop-card-bottom">
@@ -76,35 +76,15 @@
                             
                                 <div class="col-sm-3 m-b-15">
                                 <p class="f-500 c-black m-b-15">Lista de produtos</p>
-                                    <select chosen data-placeholder="Selecione o produto..." class="w-100">
-                                        <option value="United States">United States</option>
-                                        <option value="United Kingdom">United Kingdom</option>
-                                        <option value="Afghanistan">Afghanistan</option>
-                                        <option value="Aland Islands">Aland Islands</option>
-                                        <option value="Albania">Albania</option>
-                                        <option value="Algeria">Algeria</option>
-                                        <option value="American Samoa">American Samoa</option>
+                                    <select chosen data-placeholder="Selecione o produto..." class="w-100" ng-model="selectedProdutCod" ng-options="w.cod as w.name for w in dataList">
                                     </select>
-                                </div>
+                            </div>
                             
-                                <div class="form-group fg-line">                      
+                            <div class="form-group fg-line">                      
                                     <label class="f-500 c-black">Quantidade</label>
                                     <input ng-model="novoProduto.quantidade" type="number" class="form-control fg-input text-right" id="inputValue">
-                                </div>
+                            </div>
                             
-              
-                            
-                               <!--  <div class="form-group fg-line">
-                                    <label class="f-500 c-black">Escolher Foto</label>
-                                    <div class="form-group fg-line">
-                                    <img class="image-size" src="../img/no-image.png"> 
-                                    </div>
-                                    <div class="form-group fg-line"> 
-                                    <button ng-if="isNewContractDefinition" ng-click="openUpdateContractDefinitionDialog()" class="btn-size btn bgm-green btn-icon-text"><i class="zmdi zmdi-edit"></i>Foto</button> 
-                                    </div>
-                                </div> -->
-                            
-
                             <div class="col-sm-12 bottom-buttons">
                                 <button ng-click="registrarProduto()" class="btn bgm-green btn-icon-text"><i class="zmdi zmdi-edit"></i> Cadastrar</button> 
                                 <button ng-click="closeDialogModal('dialogCreateNew')" class="btn bgm-orange btn-icon-text"><i class="zmdi zmdi-close"></i> Cancelar</button>

@@ -45,7 +45,6 @@ edServices.factory('edHttpInterceptor', ['$q', '$location', function (q, locatio
     };
 }]);
 
-
 edServices.factory('ListarProdutos', ['$resource', function(resource) {
 	return resource(domainURL + '/produtos', null, {
 		get: { method:'GET'}
@@ -53,7 +52,7 @@ edServices.factory('ListarProdutos', ['$resource', function(resource) {
 }]);
 
 edServices.factory('ListarEstoque', ['$resource', function(resource) {
-	return resource(domainURL + '/listar-estoque', null, {
+	return resource(domainURL + '/estoque', null, {
 		get: { method:'GET'}
 	});
 }]);
