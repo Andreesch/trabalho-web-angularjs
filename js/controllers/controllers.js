@@ -298,9 +298,8 @@ appModule
                 if(data.erro == '1') {
                     swal("Não foi possível carregar a lista de produtos!");
                 } else {
-
                     scope.dataList = [];
-                    angular.forEach(data.msg, function(produto) {
+                    angular.forEach(data.data, function(produto) {
                         var novoProduto = {
                             cod: produto["COD"],
                             nome: produto["NOME"],
@@ -332,7 +331,9 @@ appModule
         scope.registrarProduto = function() {
             var params = scope.novoProduto;
 
-            registrarProduto.post({data: JSON.stringify(params)}, null, function(data) {
+            debugger;
+
+            registrarProduto.post({data: JSON.stringify(params)}, function(data) {
                 setTimeout(function() {
                     if(data.erro == '1') {
                         swal("Não foi possível registrar o produto! " + (data.msg ? data.msg : ""));
@@ -344,6 +345,7 @@ appModule
                     
                 }, 100);
             }, function(response){
+                debugger;
                 setTimeout(function() {
                     swal("Não foi possível registrar o produto, verifique os dados!");
                 }, 100);

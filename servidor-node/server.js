@@ -106,6 +106,41 @@
   });
  });
 
+
+ // Retrieve all users 
+ app.get('/produtos', function (req, res) {
+     dbConn.query('SELECT * FROM PRODUTO', function (error, results, fields) {
+         if (error) throw error;
+         return res.send({ error: false, data: results, message: 'users list.' });
+     });
+ });
+
+
+ // Add a new user  
+ app.post('/produto', function (req, res) {
+     let product = JSON.parse(req.body.data);
+
+     if (!product) {
+       return res.status(400).send({ error:true, message: 'Please provide user' });
+     }
+
+    var param = {};
+    param["NOME"] = product.nome;
+    param["FORNECEDOR"] = product.codFornecedor;
+    param["VALOR_AQUISICAO"] = product.valorFornecedor;
+    param["VALOR_VENDA"] = product.valorVenda;
+
+    dbConn.query("INSERT INTO PRODUTO SET ? ", param, function (error, results, fields) {
+      if (error) throw error;
+        return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
+      });
+ });
+
+ // cod: produto["COD"],
+ // nome: produto["NOME"],
+ // fornecedor: produto["FORNECEDOR"],
+ // valor: produto["VALOR_VENDA"]
+
  //  Delete user
  app.delete('/user', function (req, res) {
  let user_id = req.body.user_id;
