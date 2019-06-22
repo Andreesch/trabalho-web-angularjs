@@ -473,3 +473,89 @@ appModule
 
     }])
 
+   .controller('stock-controller', ['ngTableParams', '$scope', '$rootScope', '$location', function(ngTableParams, scope, rootScope, location) {
+    
+        if(window.localStorage.getItem("usuario") == null) {
+            location.path("/login");
+            return;
+        }
+
+        scope.selected = null;
+        scope.novoFornecedor = {};
+
+        var carregarEstoque = function() { 
+            listarEstoque.get(null, function(data) {
+                if(data.erro == '1') {
+                    swal("Não foi possível carregar o estoque de produtos!");
+                } else {
+                    scope.dataList = [];
+                    angular.forEach(data.msg, function(produto) {
+                        var novo = {
+                            cod: produto["COD"],
+                            name: produto["NOME"],
+                            dueValue: produto["TOTAL"]
+                        }
+                        scope.dataList.push(novo);
+                    });
+                }
+            }, function(request, error) {
+                swal("Um erro ocorreu: " + error);
+            });
+        }
+
+        carregarFornecedores();
+
+        scope.closeDialogModal = function(id){
+            modalDialog.hide(id);
+        }
+
+        scope.removeProduct = function(selected) {
+            waitModal.hide();
+            refreshDataList();
+            swal("Removido com sucesso!");
+        }
+
+        scope.openDialogCreateNew = function(){
+            scope.isNewContractDefinition = true;
+            cleanDialogCreateFields();
+            modalDialog.show('dialogCreateNew');
+        }
+
+        var cleanDialogCreateFields = function() {
+            console.log("Implementar cleanDialogCreateFields");
+        }
+
+        scope.cadastrarFornecedor = function() {
+
+            if(!validarCPF(scope.novoFornecedor.cpf)) {
+                swal("CPF Inválido!");
+                return;
+            }
+
+            if(!validarTelefone(scope.novoFornecedor.telefone)) {
+                swal("Telefone Inválido!");
+                return;
+            }
+
+            var params = scope.novoFornecedor;
+
+            cadastrarFornecedor.post({data: JSON.stringify(params)}, null, function(data) {
+                setTimeout(function() {
+                    if(data.erro == '1') {
+                        swal("Não foi possível cadastrar o fornecedor! " + (data.msg ? data.msg : ""));
+                    } else {
+                        swal(data.msg);
+                        scope.closeDialogModal('dialogCreateNew');
+                        carregarFornecedores();
+                    }
+                    
+                }, 100);
+            }, function(response){
+                setTimeout(function() {
+                    swal("Não foi possível cadastrar o fornecedor, verifique os dados!");
+                }, 100);
+            });
+        }
+
+    }])
+

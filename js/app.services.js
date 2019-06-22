@@ -52,6 +52,11 @@ edServices.factory('ListarProdutos', ['$resource', function(resource) {
 	});
 }]);
 
+edServices.factory('ListarEstoque', ['$resource', function(resource) {
+	return resource(domainURL + '/listar-estoque', null, {
+		get: { method:'GET'}
+	});
+}]);
 
 edServices.factory('ListarFornecedores', ['$resource', function(resource) {
 	return resource(domainURL + '/listar-fornecedores.php', null, {

@@ -1,10 +1,10 @@
 --Projeto desenvolvido com angular e grunt, para rodar executar "grunt" na pasta "projeto-web".
 --com o browser-sync basta executar na pasta "projeto-web" o comando "browser-sync start --server"
 
-drop database sigvendas;
-create database sigvendas;
+drop database web;
+create database web;
 
-use sigvendas;
+use web;
 
 CREATE TABLE `PRODUTO` (
 	`COD` INT NOT NULL AUTO_INCREMENT,
@@ -13,6 +13,15 @@ CREATE TABLE `PRODUTO` (
 	`VALOR_VENDA` double NOT NULL,
 	`FORNECEDOR` INT NOT NULL,
 	PRIMARY KEY (`COD`)
+);
+
+CREATE TABLE ESTOQUE (
+	COD INT NOT NULL AUTO_INCREMENT,
+	COD_PRODUTO INT NOT NULL,
+	QTD INT NOT NULL,
+	ATUALIZACAO DATETIME,
+	PRIMARY KEY (COD),
+	FOREIGN KEY (COD_PRODUTO) REFERENCES PRODUTO(COD)
 );
 
 CREATE TABLE `FORNECEDOR` (

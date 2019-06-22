@@ -243,6 +243,25 @@ materialAdmin
                     }
                 }
             })
+
+            .state ('stock', {
+                url: '/stock',
+                templateUrl: 'views/stock.html',
+                resolve: {
+                    loadPlugin: function($ocLazyLoad) {
+                        return $ocLazyLoad.load ([
+                            {
+                                name: 'vendors',
+                                files: [
+                                    'vendors/bower_components/autosize/dist/autosize.min.js',
+                                    'vendors/input-mask/input-mask.min.js',
+                                    'vendors/bower_components/moment/min/moment.min.js',
+                                ]
+                            }
+                        ])
+                    }
+                }
+            })
         
             //------------------------------
             // FORMS
