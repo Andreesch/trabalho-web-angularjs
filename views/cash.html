@@ -1,0 +1,100 @@
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main">
+    <aside id="sidebar" data-ng-include="'template/sidebar-left.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.left === true }"></aside>
+
+    <aside id="chat" data-ng-include="'template/chat.html'" data-ng-class="{ 'toggled': mactrl.sidebarToggle.right === true }"></aside>
+
+    <section id="content">
+        <div class="container">
+
+            <div class ="sale-view" data-ng-controller="cash-controller as cashctrl"> 
+
+                <div class="block-header">
+                    <h2>Caixa
+                        <!-- <small>Lista de produtos no carrinho</small> -->
+                    </h2>
+                </div>
+                
+                <div class="card drop-card">
+                    <div class="card-header drop-card-header">
+                        <h2>Movimentos <small></small></h2>
+                    </div>
+                            
+                    <div class="card-body drop-card-body">
+                        <div ng-if="dataList.length > 0" class="table-responsive">
+                            <table ng-table="detachedContractTable" class="table table-striped table-vmiddle">
+                                <tr ng-repeat="w in dataList">
+                                    <td data-title="'Código'">
+                                        <span>{{ w.cod }}</span>
+                                    </td>
+                                    <td data-title="'Data'">
+                                        <span>{{ w.data }}</span>
+                                    </td>
+                                    <td data-title="'Tipo'">
+                                        <span ng-if="w.tipo == 0">Venda</span>
+                                        <span ng-if="w.tipo == 1">Retirada</span>
+                                        <span ng-if="w.tipo == 2">Depósito</span>
+                                    </td>
+                                    <td data-title="'Valor'">
+                                        <span>{{ w.valor | currency : "R$ " : 2 }}</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <h2 class="total-value"> TOTAL: <span>{{valorTotal | currency : "R$ " : 2}}</span></h2>
+                        
+                        <div ng-if="loading" class="table-message">
+                            <div class="preloader pl-lg">
+                                <svg class="pl-circular" viewBox="25 25 50 50">
+                                    <circle class="plc-path" cx="50" cy="50" r="20" />
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div ng-if="dataList.length == 0 && !loading" class="table-message">
+                            <p>Sem fornecedores</p>
+                        </div>
+
+                        <div class="drop-card-bottom">
+                            <div class="bottom-buttons">
+                                <button class="btn bgm-blue" ng-click="openDialogCreateNew()">Retirar</button>
+                                <!-- <button ng-if="dataList.length > 0" class="btn bgm-green" ng-click="openUpdateProductDialog(selectedContractDetached)">Editar</button> -->
+                                <!-- <button ng-if="dataList.length > 0" class="btn bgm-red" ng-click="removeProduct(selectedContractDetached)">Inativar</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modalDialog" id="dialogCreateNew">
+                    <div class="modalDialogBox">
+                        <div class="modalDialogContent">
+                            <h2>Retirada de Dinheiro</h2>
+
+                            <div class="col-sm-6" >                                
+                                <div class="form-group fg-line">                            
+                                    <label class="f-500 c-black">Valor</label>
+                                    <input type="value" class="select-text form-control fg-input text-right" id="inputValue">
+                                </div>
+                            </div>                            
+                            <div class="col-sm-12 bottom-buttons">
+                                <button ng-if="isNewContractDefinition" ng-click="openUpdateContractDefinitionDialog()" class="btn bgm-green btn-icon-text"><i class="zmdi zmdi-edit"></i> Retirada</button> 
+                                <button ng-click="closeDialogModal('updateContractDialog')" class="btn bgm-orange btn-icon-text"><i class="zmdi zmdi-close"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+
+            </div>
+        </div>  
+    </div>
+
+    </section>
+</section>
+
+<footer id="footer" data-ng-include="'template/footer.html'"></footer>
+
+        
+
+

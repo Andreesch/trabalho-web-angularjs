@@ -1,0 +1,89 @@
+<header id="header" data-current-skin={{mactrl.currentSkin}} data-ng-include="'template/header.html'" data-ng-controller="headerCtrl as hctrl"></header>
+
+<section id="main">
+    <section id="content">
+        <div class="container">
+
+            <div class ="sale-view" data-ng-controller="login-controller as loginctrl">
+
+                <!-- Login -->
+                <div class="lc-block" id="l-login" ng-class="{ 'toggled': login === 1 }" ng-if="login === 1">
+                    <div class="input-group m-b-20">
+                        <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                        <div class="fg-line">
+                            <input type="text" class="form-control" placeholder="Usuário" ng-model="$parent.user">
+                        </div>
+                    </div>
+
+                    <div class="input-group m-b-20">
+                        <span class="input-group-addon"><i class="zmdi zmdi-male"></i></span>
+                        <div class="fg-line">
+                            <input type="password" class="form-control" placeholder="Senha" ng-model="$parent.password">
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <a href="" ng-click="doLogin()"class="btn btn-login btn-danger btn-float"><i class="zmdi zmdi-arrow-forward"></i></a>
+
+                    <ul class="login-navigation">
+                        <li data-block="#l-register" class="bgm-red" ng-click="$parent.login = 0; $parent.register = 1">Registro</li>
+                        <!-- <li data-block="#l-forget-password" class="bgm-orange" ng-click="login = 0; forgot = 1">Esqueceu a senha?</li> -->
+                    </ul>
+                </div>
+
+                <!-- Register -->
+                <div class="lc-block" id="l-register" ng-class="{ 'toggled': register === 1 }" ng-if="register === 1">
+                    <div class="input-group m-b-20">
+                        <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                        <div class="fg-line">
+                            <input type="text" class="form-control" placeholder="Usuário"  ng-model="$parent.user">   
+                        </div>
+                    </div>
+
+                    <div class="input-group m-b-20">
+                        <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+                        <div class="fg-line">
+                            <input type="text" class="form-control" placeholder="Email" ng-model="$parent.email">
+                        </div>
+                    </div>
+
+                    <div class="input-group m-b-20">
+                        <span class="input-group-addon"><i class="zmdi zmdi-male"></i></span>
+                        <div class="fg-line">
+                            <input type="password" class="form-control" placeholder="Senha" ng-model="$parent.password">
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <a href="" ng-click="doRegister()" class="btn btn-login btn-danger btn-float"><i class="zmdi zmdi-arrow-forward" ></i></a>
+
+                    <ul class="login-navigation">
+                        <li data-block="#l-login" class="bgm-green" ng-click="$parent.register = 0; $parent.login = 1">Login</li>
+                        <!-- <li data-block="#l-forget-password" class="bgm-orange" ng-click="$parent.register = 0; $parent.forgot = 1">Esqueceu a senha?</li> -->
+                    </ul>
+                </div>
+
+                <!-- Forgot Password -->
+                <!-- <div class="lc-block" id="l-forget-password" ng-class="{ 'toggled': forgot === 1 }" ng-if="forgot === 1">
+                    <p class="text-left">Digite seu email cadastrado para recuperação da senha.</p>
+
+                    <div class="input-group m-b-20">
+                        <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+                        <div class="fg-line">
+                            <input type="text" class="form-control" placeholder="Email">
+                        </div>
+                    </div>
+
+                    <a href="" class="btn btn-login btn-danger btn-float"><i class="zmdi zmdi-arrow-forward"></i></a>
+
+                    <ul class="login-navigation">
+                        <li data-block="#l-login" class="bgm-green" ng-click="$parent.forgot = 0; $parent.login = 1">Login</li>
+                        <li data-block="#l-register" class="bgm-red" ng-click="$parent.forgot = 0; $parent.register = 1">Register</li>
+                    </ul>
+                </div> -->
+            </div>
+        </div>
+    </section>
+</section>
