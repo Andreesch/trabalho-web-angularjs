@@ -177,12 +177,22 @@
 
  //  Delete user
  app.delete('/user', function (req, res) {
- let user_id = req.body.user_id;
- if (!user_id) {
-     return res.status(400).send({ error: true, message: 'Please provide user_id' });
- }
- dbConn.query('DELETE FROM users WHERE id = ?', [user_id], function (error, results, fields) {
+  let user_id = req.body.user_id;
+ 
+  if (!user_id) {
+     return res.status(400).send({ error: true, message: 'Please provide user_id' }); 
+  }
+
+  dbConn.query('DELETE FROM users WHERE id = ?', [user_id], function (error, results, fields) {
      if (error) throw error;
      return res.send({ error: false, data: results, message: 'User has been updated successfully.' });
- });
+    });
+  });
+
+ // Recuperar todo o estoque 
+ app.get('/estoque', function (req, res) {
+     dbConn.query('SELECT e.*, p.NOME FROM ESTOQUE e JOIN PRODUTO p ON e.COD_PRODUTO = p.COD ORDER BY e.COD ASC ', function (error, results, fields) {
+         if (error) throw error;
+         return res.send({ error: false, data: results, message: 'users list.' });
+     });
  });
