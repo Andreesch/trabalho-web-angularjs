@@ -63,7 +63,7 @@
        return res.status(400).send({ error:true, message: 'Please provide user' });
      }
 
-    dbConn.query("INSERT INTO USUARIO SET ? ", {usuario: user}, function (error, results, fields) {
+    dbConn.query("INSERT INTO USUARIO SET ? ", user, function (error, results, fields) {
        if (error) throw error;
          return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
          });
@@ -72,14 +72,14 @@
   // Validar usuário  
  app.post('/validar-login', function (req, res) {
      let user = req.body;
-
-     console.log(user);
+     let usuario = user.usuario;
+     let senha = user.senha;
 
      if (!user) {
        return res.status(400).send({ error:true, message: 'Por favor, informe os dados de login!' });
      }
 
-    dbConn.query("SELECT u.COD FROM USUARIO u WHERE u.USUARIO = ? AND u.SENHA = ? ", [{usuario: user.usuario},{senha: user.senha}], function (error, results, fields) {
+    dbConn.query("SELECT u.COD FROM USUARIO u WHERE u.USUARIO = ? AND u.SENHA = ? ", [usuario, senha], function (error, results, fields) {
        if (error){
           throw error;
        } 
