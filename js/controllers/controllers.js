@@ -539,7 +539,7 @@ appModule
 
     }])
 
-   .controller('stock-controller', ['ngTableParams', '$scope', '$rootScope', '$location', 'ListarEstoque', function(ngTableParams, scope, rootScope, location, listarEstoque) {
+   .controller('stock-controller', ['ngTableParams', '$scope', '$rootScope', '$location', 'ListarEstoque', 'RegistrarEstoque', 'ListarProdutos', 'DeletarEstoque', function(ngTableParams, scope, rootScope, location, listarEstoque, registrarEstoque, listarProdutos, deletarEstoque) {
     
         if(window.localStorage.getItem("usuario") == null) {
             location.path("/login");
@@ -547,8 +547,29 @@ appModule
         }
 
         scope.selected = null;
-        scope.novoFornecedor = {};
-        scope.selectedProdutCod = null;
+        scope.novoEstoque = {};
+        scope.selectedEstoque = null;
+
+        var carregarProdutos = function() {
+            listarProdutos.get(null, function(data){
+                if(data.erro == '1') {
+                    swal("Não foi possível carregar a lista de produtos!");
+                } else {
+                    scope.productList = [];
+                    angular.forEach(data.data, function(produto) {
+                        var novoProduto = {
+                            cod: produto["COD"],
+                            nome: produto["NOME"],
+                            fornecedor: produto["FORNECEDOR"],
+                            valor: produto["VALOR_VENDA"]
+                        }
+                        scope.productList.push(novoProduto);
+                    });   
+                }
+            }, function(response){
+                swal("Não foi possível carregar a lista de produtos!");
+            });
+        }
 
         var carregarEstoque = function() { 
             listarEstoque.get(null, function(data) {
@@ -569,6 +590,9 @@ appModule
             }, function(request, error) {
                 swal("Um erro ocorreu: " + error);
             });
+
+            // Listagem de produtos
+            carregarProdutos();
         }
 
         carregarEstoque();
@@ -577,53 +601,56 @@ appModule
             modalDialog.hide(id);
         }
 
-        scope.removeProduct = function(selected) {
-            waitModal.hide();
-            refreshDataList();
-            swal("Removido com sucesso!");
-        }
-
         scope.openDialogCreateNew = function(){
-            scope.isNewContractDefinition = true;
             cleanDialogCreateFields();
             modalDialog.show('dialogCreateNew');
         }
 
         var cleanDialogCreateFields = function() {
-            console.log("Implementar cleanDialogCreateFields");
+            scope.novoEstoque = null;
         }
 
-        // scope.cadastrarFornecedor = function() {
+        scope.registrarEstoque = function() {
+            if (scope.novoEstoque.cod == null) {
+                swal("Selecione um produto válido!");
+                return;
+            }
 
-        //     if(!validarCPF(scope.novoFornecedor.cpf)) {
-        //         swal("CPF Inválido!");
-        //         return;
-        //     }
+            if (scope.novoEstoque.qtd == null || scope.novoEstoque.qtd == 0) {
+                swal("Digite uma quantidade válida!");
+                return;
+            }
 
-        //     if(!validarTelefone(scope.novoFornecedor.telefone)) {
-        //         swal("Telefone Inválido!");
-        //         return;
-        //     }
+            // Seta data de atualização
+            scope.novoEstoque.atualizacao = new Date();
 
-        //     var params = scope.novoFornecedor;
+            registrarEstoque.post({data: JSON.stringify(scope.novoEstoque)}, function(data){
+                swal(data.msg);
+                scope.closeDialogModal('dialogCreateNew');
+                carregarEstoque();
+            }, function(error){
+                swal("Não foi possível efetuar o cadastro de estoque: " + error);
+            });
+        }
 
-        //     cadastrarFornecedor.post({data: JSON.stringify(params)}, null, function(data) {
-        //         setTimeout(function() {
-        //             if(data.erro == '1') {
-        //                 swal("Não foi possível cadastrar o fornecedor! " + (data.msg ? data.msg : ""));
-        //             } else {
-        //                 swal(data.msg);
-        //                 scope.closeDialogModal('dialogCreateNew');
-        //                 carregarFornecedores();
-        //             }
-                    
-        //         }, 100);
-        //     }, function(response){
-        //         setTimeout(function() {
-        //             swal("Não foi possível cadastrar o fornecedor, verifique os dados!");
-        //         }, 100);
-        //     });
-        // }
+        scope.setSelected = function(estoque) {
+            scope.selectedEstoque = estoque;
+        }
+
+        scope.removeEstoque = function() {
+            if (scope.selectedEstoque == null) {
+                swal("Selecione um registro antes de tentar removê-lo!");
+                return;
+            }
+
+            deletarEstoque.post({stock: scope.selectedEstoque.cod}, function(data){
+                swal(data.msg);
+                carregarEstoque();
+            }, function(error){
+                swal("Não foi possível remover o estoque: " + error);
+            });
+
+        }
 
     }])
 

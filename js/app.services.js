@@ -111,3 +111,15 @@ edServices.factory('ValidarLogin', ['$resource', function(resource) {
 		post: { method:'POST'}
 	});
 }]);
+
+edServices.factory('RegistrarEstoque', ['$resource', function(resource) {
+	return resource(domainURL + '/registrar-estoque', {data: '@data'}, {
+		post: { method:'POST'}
+	});
+}]);
+
+edServices.factory('DeletarEstoque', ['$resource', function(resource) {
+	return resource(domainURL + '/remover-estoque', {stock: '@stock'}, {
+		post: { method:'POST'}
+	});
+}]);

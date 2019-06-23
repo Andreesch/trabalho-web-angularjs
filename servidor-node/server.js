@@ -237,3 +237,37 @@
          return res.send({ error: false, data: results, message: 'users list.' });
      });
  });
+
+app.post('/registrar-estoque', function (req, res) {
+   let estoque = JSON.parse(req.body.data);
+
+   console.log(estoque);
+
+   if (!estoque) {
+     return res.status(400).send({ error:true, message: 'Informe um estoque!' });
+   }
+
+  let param = {};
+  param["COD_PRODUTO"] = estoque.cod;
+  param["QTD"] = estoque.qtd;
+  param["ATUALIZACAO"] = estoque.atualizacao;
+
+  dbConn.query("INSERT INTO ESTOQUE SET ? ", param, function (error, results, fields) {
+    if (error) throw error;
+      return res.send({ error: false, data: results, msg: 'Estoque cadastrado com sucesso!' });
+    });
+});
+
+ //  Delete user
+ app.post('/remover-estoque', function (req, res) {
+  let stock_id = req.body.stock;
+ 
+  if (!stock_id) {
+     return res.status(400).send({ error: true, message: 'Fornecer um id de estoque.' }); 
+  }
+
+  dbConn.query('DELETE FROM ESTOQUE WHERE cod = ?', [stock_id], function (error, results, fields) {
+     if (error) throw error;
+     return res.send({ error: false, data: results, msg: 'Estoque deletado com sucesso.' });
+    });
+  });
