@@ -58,7 +58,7 @@ appModule
 
     }])
 
-    .controller('sales-controller', ['ngTableParams', '$scope', '$rootScope', '$location', 'ListarProdutos', 'EfetuarVenda', function(ngTableParams, scope, rootScope, location, listarProdutos, efetuarVenda) {
+    .controller('sales-controller', ['ngTableParams', '$scope', '$rootScope', '$location', 'ListarProdutos', 'EfetuarVenda', 'VerificarEstoque', function(ngTableParams, scope, rootScope, location, listarProdutos, efetuarVenda, verificarEstoque) {
 
         if(window.localStorage.getItem("usuario") == null) {
             location.path("/login");
@@ -100,22 +100,41 @@ appModule
 
         scope.adicionarProduto = function() {
 
-            var i;
-            for(i = 0; i < scope.tableDataList.length; i++) {
-                if(scope.tableDataList[i].cod == scope.produtoAdicionar.cod) {
-                    return; //Já adicionado
-                }
+            if(!scope.produtoAdicionar.qtd) {
+                swal("Digite uma quantidade");
+                return;
             }
 
-            if(scope.produtoAdicionar) {
-                scope.tableDataList.push(scope.produtoAdicionar);
-            }
-            calcularValorTotal();
+            verificarEstoque.get({produto: scope.produtoAdicionar.cod}, function(data){
+                if(data.erro == '1') {
+                    swal("Não foi possível verificar o estoque!");
+                } else {
+                    if(!data.data || !data.data[0] || !data.data[0]["QTD"] || data.data[0]["QTD"] < scope.produtoAdicionar.qtd) {
+                        swal("Não há estoque suficiente do produto!");
+                    } else {
+                        var i;
+                        for(i = 0; i < scope.tableDataList.length; i++) {
+                            if(scope.tableDataList[i].cod == scope.produtoAdicionar.cod) {
+                                return; //Já adicionado
+                            }
+                        }
+
+                        if(scope.produtoAdicionar) {
+                            scope.produtoAdicionar.valor = scope.produtoAdicionar.valor * scope.produtoAdicionar.qtd;
+                            scope.tableDataList.push(scope.produtoAdicionar);
+                        }
+                        calcularValorTotal();
+                    }
+                }
+            }, function(response){
+                swal("Não foi possível verificar o estoque!");
+            });
         }
 
         scope.removerProduto = function() {
             if(!scope.selected) {
                 swal("Selecione um produto para remover!");
+                return;
             }
 
             var i;
@@ -130,6 +149,7 @@ appModule
         }
 
         scope.concluirVenda = function() {
+            debugger;
             swal("Confirmar venda?");
             swal({
                 title: "Atenção",
@@ -535,7 +555,6 @@ appModule
                 if(data.erro == '1') {
                     swal("Não foi possível carregar o estoque de produtos!");
                 } else {
-                    debugger;
                     scope.dataList = [];
                     angular.forEach(data.data, function(produto) {
                         var novo = {

@@ -28,7 +28,17 @@
                                         </select>
                                     </div>                                    
                                 </div>
+                            </div>          
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-3" >                                
+                                    <div class="form-group fg-line">                            
+                                        <label class="f-500 c-black" >Quantidade</label>
+                                        <input type="number" class="form-control fg-input text-right" id="inputValue" ng-model="produtoAdicionar.qtd">
+                                    </div>
+                                </div>     
                             </div>
+
                             <div class="bottom-buttons">
                                 <button class="btn bgm-blue" ng-click="adicionarProduto()">Adicionar</button>
                             </div>
@@ -42,6 +52,9 @@
                                     </td>
                                     <td data-title="'Fornecedor'">
                                         <span>{{ w.fornecedor }}</span>
+                                    </td>
+                                    <td data-title="'Quantidade'">
+                                        <span>{{w.qtd}}</span>
                                     </td>
                                     <td data-title="'Valor'">
                                         <span>{{ w.valor | currency : "R$ " : 2 }}</span>

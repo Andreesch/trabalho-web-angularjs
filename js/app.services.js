@@ -69,6 +69,12 @@ edServices.factory('RegistrarUsuario', ['$resource', function(resource) {
 	});
 }]);
 
+edServices.factory('VerificarEstoque', ['$resource', function(resource) {
+	return resource(domainURL + '/verificar-estoque', {produto: '@produto'}, {
+		get: { method:'GET'}
+	});
+}]);
+
 edServices.factory('EfetuarVenda', ['$resource', function(resource) {
 	return resource(domainURL + '/efetuar-venda', {data: '@data'}, {
 		post: { method:'POST'}

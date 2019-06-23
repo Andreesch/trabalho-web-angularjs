@@ -152,19 +152,42 @@
       });
  });
 
+ app.get('/verificar-estoque', function (req, res) {
+    let produto = req.query.produto;
+    console.log(produto);
+    dbConn.query("SELECT QTD FROM ESTOQUE WHERE COD_PRODUTO = ?", produto, function (error, results, fields) {
+      if (error) throw error;
+      return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
+    });
+ });
 
  // Add a new user  
  app.post('/efetuar-venda', function (req, res) {
-     let fornecedor = JSON.parse(req.body.data);
+     let requestParams = JSON.parse(req.body.data);
 
-     if (!fornecedor) {
+     if (!requestParams) {
        return res.status(400).send({ error:true, message: 'Please provide user' });
      }
 
-    dbConn.query("INSERT INTO FORNECEDOR SET ? ", fornecedor, function (error, results, fields) {
+     var movimento = {};
+     movimento["DESCRICAO"] = "Venda de produtos";
+     movimento["VALOR_TOTAL"] = requestParams.valor;
+     movimento["DATA"] = new Date();
+     movimento["TIPO"] = 0;
+
+    dbConn.query("INSERT INTO MOVIMENTO SET ? ", movimento, function (error, results, fields) {
       if (error) throw error;
-        return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
-      });
+    });
+
+    if(requestParams.produtos) {
+      for(var i = 0; i < requestParams.produtos.length; i++) { 
+        dbConn.query("UPDATE ESTOQUE set QTD = (QTD - ?) WHERE COD_PRODUTO = ?", [requestParams.qtd, requestParams.produtos[i].cod], function (error, results, fields) {
+          if (error) throw error;
+        });
+      }
+    }
+
+    return res.send({ error: false, data: {}, message: 'New user has been created successfully.' });
  });
 
  app.get('/listar-movimentos', function (req, res) {
