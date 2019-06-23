@@ -61,7 +61,7 @@
                             <div class="bottom-buttons">
                                 <button class="btn bgm-blue" ng-click="openDialogCreateNew()">Novo</button>
                                 <!-- <button ng-if="dataList.length > 0" class="btn bgm-green" ng-click="openUpdateProductDialog(selectedContractDetached)">Editar</button> -->
-                                <button ng-if="dataList.length > 0" class="btn bgm-red" ng-click="removeProduct(selectedContractDetached)">Remover</button>
+                                <button ng-if="dataList.length > 0" class="btn bgm-red" ng-click="removeEstoque()">Remover</button>
                             </div>
                         </div>
                     </div>
@@ -74,17 +74,17 @@
 
                             <div class="form-group fg-line">                      
                                 <p class="f-500 c-black m-b-15">Lista de produtos</p>
-                                    <select chosen data-placeholder="Selecione o produto..." class="w-100" ng-model="selectedProdutCod" ng-options="w.cod as w.name for w in dataList">
+                                    <select chosen data-placeholder="Selecione o produto..." class="w-100" ng-model="novoEstoque.cod" ng-options="o.cod as o.nome for o in productList">
                                     </select>
                             </div>    
                             
                             <div class="form-group fg-line">                      
                                     <label class="f-500 c-black">Quantidade</label>
-                                    <input ng-model="novoProduto.quantidade" type="number" class="form-control fg-input text-right" id="inputValue">
+                                    <input ng-model="novoEstoque.qtd" type="number" class="form-control fg-input text-right" id="inputValue">
                             </div>
                             
                             <div class="col-sm-12 bottom-buttons">
-                                <button ng-click="registrarProduto()" class="btn bgm-green btn-icon-text"><i class="zmdi zmdi-edit"></i> Cadastrar</button> 
+                                <button ng-click="registrarEstoque()" class="btn bgm-green btn-icon-text"><i class="zmdi zmdi-edit"></i> Cadastrar</button> 
                                 <button ng-click="closeDialogModal('dialogCreateNew')" class="btn bgm-orange btn-icon-text"><i class="zmdi zmdi-close"></i> Cancelar</button>
                             </div>
                         </div>
