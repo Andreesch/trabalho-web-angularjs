@@ -57,7 +57,8 @@
                             <div class="bottom-buttons">
                                 <button class="btn bgm-blue" ng-click="openDialogCreateNew()">Novo</button>
                                 <!-- <button ng-if="dataList.length > 0" class="btn bgm-green" ng-click="openUpdateProductDialog(selectedContractDetached)">Editar</button> -->
-                                <button ng-if="dataList.length > 0" class="btn bgm-red" ng-click="inativarFornecedor()">Inativar</button>
+                                <button ng-if="dataList.length > 0" class="btn bgm-red" ng-click="atualizarStatusFornecedor(false)">Inativar</button>
+                                <button ng-if="dataList.length > 0" class="btn bgm-orange" ng-click="atualizarStatusFornecedor(true)">Ativar</button>
                             </div>
                         </div>
                     </div>

@@ -123,3 +123,9 @@ edServices.factory('DeletarEstoque', ['$resource', function(resource) {
 		post: { method:'POST'}
 	});
 }]);
+
+edServices.factory('AtualizarFornecedor', ['$resource', function(resource) {
+	return resource(domainURL + '/atualizar-fornecedor', {provider: '@provider'}, {
+		post: { method:'POST'}
+	});
+}]);

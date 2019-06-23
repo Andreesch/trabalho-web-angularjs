@@ -33,19 +33,7 @@
  // connect to database
  dbConn.connect();  
 
- // Retrieve user with id 
- app.get('/user/:id', function (req, res) {
-     let user_id = req.params.id;
-     if (!user_id) {
-      return res.status(400).send({ error: true, message: 'Please provide user_id' });
-     }
-    dbConnect.query('SELECT * FROM users where id=?', user_id, function (error, results, fields) {
-      if (error) throw error;
-       return res.send({ error: false, data: results[0], message: 'users list.' });
-     });
- });
-
- // Add a new user  
+ // Adiciona usuário
  app.post('/registrar-usuario', function (req, res) {
      let user = req.body;
 
@@ -85,23 +73,9 @@
       });
  });
 
- //  Update user with id
- app.put('/user', function (req, res) {
- let user_id = req.body.user_id;
- let user = req.body.user;
- if (!user_id || !user) {
-   return res.status(400).send({ error: user, message: 'Please provide user and user_id' });
- }
- dbConn.query("UPDATE users SET user = ? WHERE id = ?", [user, user_id], function (error, results, fields) {
-   if (error) throw error;
-   return res.send({ error: false, data: results, message: 'user has been updated successfully.' });
-  });
- });
-
-
  // Retrieve all users 
  app.get('/produtos', function (req, res) {
-     dbConn.query('SELECT * FROM PRODUTO', function (error, results, fields) {
+     dbConn.query('SELECT p.*, e.QTD FROM PRODUTO p JOIN ESTOQUE e ON e.COD_PRODUTO = p.COD', function (error, results, fields) {
          if (error) throw error;
          return res.send({ error: false, data: results, message: 'users list.' });
      });
@@ -131,9 +105,9 @@
 
  // Retrieve all users 
  app.get('/fornecedores', function (req, res) {
-     dbConn.query('SELECT * FROM FORNECEDOR', function (error, results, fields) {
+     dbConn.query('SELECT * FROM FORNECEDOR WHERE ATIVO = 1', function (error, results, fields) {
          if (error) throw error;
-         return res.send({ error: false, data: results, message: 'users list.' });
+         return res.send({ error: false, data: results, message: 'lista de fornecedores' });
      });
  });
 
@@ -216,20 +190,6 @@
       });
  });
 
- //  Delete user
- app.delete('/user', function (req, res) {
-  let user_id = req.body.user_id;
- 
-  if (!user_id) {
-     return res.status(400).send({ error: true, message: 'Please provide user_id' }); 
-  }
-
-  dbConn.query('DELETE FROM users WHERE id = ?', [user_id], function (error, results, fields) {
-     if (error) throw error;
-     return res.send({ error: false, data: results, message: 'User has been updated successfully.' });
-    });
-  });
-
  // Recuperar todo o estoque 
  app.get('/estoque', function (req, res) {
      dbConn.query('SELECT e.*, p.NOME FROM ESTOQUE e JOIN PRODUTO p ON e.COD_PRODUTO = p.COD ORDER BY e.COD ASC ', function (error, results, fields) {
@@ -258,7 +218,7 @@ app.post('/registrar-estoque', function (req, res) {
     });
 });
 
- //  Delete user
+ // Remoção de estoque
  app.post('/remover-estoque', function (req, res) {
   let stock_id = req.body.stock;
  
@@ -269,5 +229,21 @@ app.post('/registrar-estoque', function (req, res) {
   dbConn.query('DELETE FROM ESTOQUE WHERE cod = ?', [stock_id], function (error, results, fields) {
      if (error) throw error;
      return res.send({ error: false, data: results, msg: 'Estoque deletado com sucesso.' });
+    });
+  });
+
+  // Inativação de fornecedor
+ app.post('/atualizar-fornecedor', function (req, res) {
+  console.log(req.body.provider);
+  let provider_id = req.body.provider.cod;
+  let provider_status = req.body.provider.status;
+ 
+  if (!provider_id) {
+     return res.status(400).send({ error: true, message: 'Fornecer um id de fornecedor.' }); 
+  }
+
+  dbConn.query('UPDATE FORNECEDOR SET ATIVO = ? WHERE cod = ?', [provider_status,provider_id], function (error, results, fields) {
+     if (error) throw error;
+     return res.send({ error: false, data: results, msg: 'Fornecedor inativado com sucesso.' });
     });
   });

@@ -80,7 +80,8 @@ appModule
                             cod: produto["COD"],
                             nome: produto["NOME"],
                             fornecedor: produto["FORNECEDOR"],
-                            valor: produto["VALOR_VENDA"]
+                            valor: produto["VALOR_VENDA"],
+                            qtd_disponivel: produto["QTD"]
                         }
                         scope.dataList.push(novoProduto);
                     });   
@@ -115,6 +116,7 @@ appModule
                         var i;
                         for(i = 0; i < scope.tableDataList.length; i++) {
                             if(scope.tableDataList[i].cod == scope.produtoAdicionar.cod) {
+                                swal("Produto já adicionado!");
                                 return; //Já adicionado
                             }
                         }
@@ -216,7 +218,7 @@ appModule
         }
     }])
 
-    .controller('providers-controller', ['ngTableParams', '$scope', '$rootScope', '$location', 'ListarFornecedores', 'CadastrarFornecedor', function(ngTableParams, scope, rootScope, location, listarFornecedores, cadastrarFornecedor) {
+    .controller('providers-controller', ['ngTableParams', '$scope', '$rootScope', '$location', 'ListarFornecedores', 'CadastrarFornecedor', 'AtualizarFornecedor', function(ngTableParams, scope, rootScope, location, listarFornecedores, cadastrarFornecedor, atualizarFornecedor) {
 
         if(window.localStorage.getItem("usuario") == null) {
             location.path("/login");
@@ -306,13 +308,40 @@ appModule
             scope.selected = fornecedor;
         }
 
-        scope.inativarFornecedor = function() {
-            console.log("IMPLEMENTAR INATIVAR FORNECEDOR"); //TODO
+        scope.atualizarStatusFornecedor = function(status) {
+            let messageDialogConfirm = "";
+
+            if (status) {
+                messageDialogConfirm = "Deseja ativar este fornecedor?";
+                scope.selected.status = 1;
+            } else {
+                messageDialogConfirm = "Deseja inativar este fornecedor?";
+                scope.selected.status = 0;
+            }
+              swal({
+                title: "Atenção",
+                text: messageDialogConfirm,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Sim',
+                cancelButtonText: "Não"
+             },
+             function(isConfirm){
+                if (isConfirm){
+
+                    atualizarFornecedor.post({provider: scope.selected}, function(data){
+                        carregarFornecedores();
+                    }, function(error){
+                        swal("Não foi possível inativar o fornecedor: " + error);
+                    });   
+                }
+            });
         }
 
     }])
 
-    .controller('products-controller', ['ngTableParams', '$scope', '$rootScope', '$location', 'ListarProdutos', 'RegistrarProduto', function(ngTableParams, scope, rootScope, location, listarProdutos, registrarProduto) {
+    .controller('products-controller', ['ngTableParams', '$scope', '$rootScope', '$location', 'ListarProdutos', 'RegistrarProduto', 'ListarFornecedores', function(ngTableParams, scope, rootScope, location, listarProdutos, registrarProduto, listarFornecedores) {
 
         if(window.localStorage.getItem("usuario") == null) {
             location.path("/login");
@@ -340,6 +369,29 @@ appModule
                 }
             }, function(response){
                 swal("Não foi possível carregar a lista de produtos!");
+            });
+
+            carregarFornecedores();
+        }
+
+        var carregarFornecedores = function() { 
+            listarFornecedores.get(null, function(data) {
+                if(data.erro == '1') {
+                    swal("Não foi possível carregar a lista de fornecedores!");
+                } else {
+                    scope.providersList = [];
+                    angular.forEach(data.data, function(produto) {
+                        var novo = {
+                            cod: produto["COD"],
+                            name: produto["NOME"],
+                            dueValue: produto["TOTAL"],
+                            active: produto["ATIVO"]
+                        }
+                        scope.providersList.push(novo);
+                    });
+                }
+            }, function(request, error) {
+                swal("Um erro ocorreu: " + error);
             });
         }
 

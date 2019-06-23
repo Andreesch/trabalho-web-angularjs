@@ -28,7 +28,14 @@
                                         </select>
                                     </div>                                    
                                 </div>
-                            </div>          
+                            </div>
+
+                            <div class="col-sm-3" ng-if="$parent.produtoAdicionar.qtd_disponivel">                                
+                                <div class="form-group fg-line">                            
+                                    <label class="f-500 c-red" >* Quantidade disponível: {{$parent.produtoAdicionar.qtd_disponivel}}</label>
+                                </div>
+                            </div>     
+          
 
                             <div class="col-sm-12">
                                 <div class="col-sm-3" >                                
