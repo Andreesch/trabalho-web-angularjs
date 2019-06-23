@@ -29,7 +29,7 @@
                                         <span>{{ w.cod }}</span>
                                     </td>
                                     <td data-title="'Data'">
-                                        <span>{{ w.data }}</span>
+                                        <span>{{ w.data | date: 'dd/MM/yy HH:mm' }}</span>
                                     </td>
                                     <td data-title="'Descricao'">
                                         <span>{{w.descricao}}</span>
@@ -57,7 +57,7 @@
                         </div>
                         
                         <div ng-if="dataList.length == 0 && !loading" class="table-message">
-                            <p>Sem fornecedores</p>
+                            <p>Não há movimentação</p>
                         </div>
 
                         <div class="drop-card-bottom">

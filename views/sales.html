@@ -16,7 +16,7 @@
                 
                 <div class="card drop-card">
                     <div class="card-header drop-card-header">
-                        <h2>Produtos <small>Lista de produtos no carrinho.</small></h2>
+                        <h2>Produtos <small>Lista de produtos a serem vendidos.</small></h2>
                     </div>
                             
                     <div class="card-body drop-card-body">
@@ -24,7 +24,7 @@
                             <div class="form-group" style="padding: 18px;">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control" ng-model="$parent.produtoAdicionar" ng-options="item as (item.cod + ' - ' + item.nome) for item in dataList track by item.cod">
+                                        <select chosen class="form-control" ng-model="$parent.produtoAdicionar" ng-options="item as (item.cod + ' - ' + item.nome) for item in dataList track by item.cod">
                                         </select>
                                     </div>                                    
                                 </div>

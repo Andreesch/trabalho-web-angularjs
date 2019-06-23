@@ -643,11 +643,23 @@ appModule
                 return;
             }
 
-            deletarEstoque.post({stock: scope.selectedEstoque.cod}, function(data){
-                swal(data.msg);
-                carregarEstoque();
-            }, function(error){
-                swal("Não foi possível remover o estoque: " + error);
+            swal({
+                title: "Atenção",
+                text: "Deseja excluir este registro de estoque?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Sim',
+                cancelButtonText: "Não"
+             },
+             function(isConfirm){
+                if (isConfirm){
+                    deletarEstoque.post({stock: scope.selectedEstoque.cod}, function(data){
+                    carregarEstoque();
+                    }, function(error){
+                        swal("Não foi possível remover o estoque: " + error);
+                    });   
+                }
             });
 
         }
