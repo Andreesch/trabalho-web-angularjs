@@ -150,8 +150,29 @@ appModule
             calcularValorTotal();
         }
 
+        // function successSale(message) {
+        //     scope.tableDataList = [];
+        //     scope.valorTotal = 0;
+        //     debugger;
+
+        //      swal({
+        //         title: "Sucesso",
+        //         text: message,
+        //         type: "warning",
+        //         showCancelButton: false,
+        //         confirmButtonColor: '#DD6B55',
+        //         confirmButtonText: 'Ok',
+        //         closeOnCancel: false
+        //      },
+        //      function(isConfirm){
+        //         if(isConfirm) {
+        //             window.location.reload();
+        //         }
+                
+        //      });
+        // }
+
         scope.concluirVenda = function() {
-            debugger;
             swal("Confirmar venda?");
             swal({
                 title: "Atenção",
@@ -174,9 +195,10 @@ appModule
                             if(data.erro == '1') {
                                 swal("Não foi possível efetuar a venda! " + (data.msg ? data.msg : ""));
                             } else {
-                                swal(data.data);
+                                swal.close();
                                 scope.tableDataList = [];
                                 scope.valorTotal = 0;
+                                window.location.reload();
                             }
                             
                         }, 100);
@@ -201,11 +223,11 @@ appModule
             scope.tableDataList = [];
         }
 
-        scope.removeProduct = function(selected) {
-            waitModal.hide();
-            refreshDataList();
-            swal("Removido com sucesso!");
-        }
+        // scope.removeProduct = function(selected) {
+        //     waitModal.hide();
+        //     refreshDataList();
+        //     swal("Removido com sucesso!");
+        // }
 
         scope.openDialogCreateNew = function(){
             scope.isNewContractDefinition = true;

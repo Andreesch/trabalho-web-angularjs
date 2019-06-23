@@ -33,6 +33,10 @@
  // connect to database
  dbConn.connect();  
 
+ /*
+      ********* INICIO API's USUÁRIO
+ */
+
  // Adiciona usuário
  app.post('/registrar-usuario', function (req, res) {
      let user = req.body;
@@ -73,7 +77,12 @@
       });
  });
 
- // Retrieve all users 
+
+ /*
+      ********* INICIO API's PRODUTOS
+ */
+
+ // Lista todos os produtos cadastrados 
  app.get('/produtos', function (req, res) {
      dbConn.query('SELECT p.*, e.QTD FROM PRODUTO p LEFT JOIN ESTOQUE e ON e.COD_PRODUTO = p.COD', function (error, results, fields) {
          if (error) throw error;
@@ -82,7 +91,7 @@
  });
 
 
- // Add a new user  
+ // Adiciona um produto 
  app.post('/produto', function (req, res) {
      let product = JSON.parse(req.body.data);
 
@@ -102,8 +111,12 @@
       });
  });
 
+/*
+      ********* INICIO API's FORNECEDORES
+ */
 
- // Retrieve all users 
+
+ // Lista todos os fornecedores
  app.get('/fornecedores', function (req, res) {
      dbConn.query('SELECT * FROM FORNECEDOR', function (error, results, fields) {
          if (error) throw error;
@@ -112,7 +125,7 @@
  });
 
 
- // Add a new user  
+ // Adiciona um fornecedor  
  app.post('/fornecedor', function (req, res) {
      let fornecedor = JSON.parse(req.body.data);
 
@@ -126,6 +139,36 @@
       });
  });
 
+ 
+ // Atualização de fornecedor
+ app.post('/atualizar-fornecedor', function (req, res) {
+  console.log(req.body.provider);
+  let provider_id = req.body.provider.cod;
+  let provider_status = req.body.provider.status;
+ 
+  if (!provider_id) {
+     return res.status(400).send({ error: true, message: 'Fornecer um id de fornecedor.' }); 
+  }
+
+  dbConn.query('UPDATE FORNECEDOR SET ATIVO = ? WHERE cod = ?', [provider_status,provider_id], function (error, results, fields) {
+     if (error) throw error;
+     return res.send({ error: false, data: results, msg: 'Fornecedor inativado com sucesso.' });
+    });
+  });
+
+ /*
+      ********* INICIO API's ESTOQUE
+ */
+
+  // Recuperar todo o estoque 
+ app.get('/estoque', function (req, res) {
+     dbConn.query('SELECT e.*, p.NOME FROM ESTOQUE e JOIN PRODUTO p ON e.COD_PRODUTO = p.COD ORDER BY e.COD ASC ', function (error, results, fields) {
+         if (error) throw error;
+         return res.send({ error: false, data: results, message: 'users list.' });
+     });
+ });
+
+ // Valida quantidade do produto em estoque
  app.get('/verificar-estoque', function (req, res) {
     let produto = req.query.produto;
     console.log(produto);
@@ -135,70 +178,7 @@
     });
  });
 
- // Add a new user  
- app.post('/efetuar-venda', function (req, res) {
-     let requestParams = JSON.parse(req.body.data);
-
-     if (!requestParams) {
-       return res.status(400).send({ error:true, message: 'Please provide user' });
-     }
-
-     var movimento = {};
-     movimento["DESCRICAO"] = "Venda de produtos";
-     movimento["VALOR_TOTAL"] = requestParams.valor;
-     movimento["DATA"] = new Date();
-     movimento["TIPO"] = 0;
-
-    dbConn.query("INSERT INTO MOVIMENTO SET ? ", movimento, function (error, results, fields) {
-      if (error) throw error;
-    });
-
-    if(requestParams.produtos) {
-      for(var i = 0; i < requestParams.produtos.length; i++) { 
-        dbConn.query("UPDATE ESTOQUE set QTD = (QTD - ?) WHERE COD_PRODUTO = ?", [requestParams.qtd, requestParams.produtos[i].cod], function (error, results, fields) {
-          if (error) throw error;
-        });
-      }
-    }
-
-    return res.send({ error: false, data: {}, message: 'New user has been created successfully.' });
- });
-
- app.get('/listar-movimentos', function (req, res) {
-     dbConn.query('SELECT * FROM MOVIMENTO m', function (error, results, fields) {
-         if (error) throw error;
-         return res.send({ error: false, data: results, message: 'users list.' });
-     });
- });
-
- app.post('/movimento', function (req, res) {
-     let movimento = JSON.parse(req.body.data);
-
-     if (!movimento) {
-       return res.status(400).send({ error:true, message: 'Please provide user' });
-     }
-
-    var param = {};
-    param["VALOR_TOTAL"] = movimento.valor;
-    param["DATA"] = new Date();
-    param["TIPO"] = movimento.tipo;
-    param["DESCRICAO"] = movimento.descricao;
-
-    dbConn.query("INSERT INTO MOVIMENTO SET ? ", param, function (error, results, fields) {
-      if (error) throw error;
-        return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
-      });
- });
-
- // Recuperar todo o estoque 
- app.get('/estoque', function (req, res) {
-     dbConn.query('SELECT e.*, p.NOME FROM ESTOQUE e JOIN PRODUTO p ON e.COD_PRODUTO = p.COD ORDER BY e.COD ASC ', function (error, results, fields) {
-         if (error) throw error;
-         return res.send({ error: false, data: results, message: 'users list.' });
-     });
- });
-
-app.post('/registrar-estoque', function (req, res) {
+ app.post('/registrar-estoque', function (req, res) {
    let estoque = JSON.parse(req.body.data);
 
    console.log(estoque);
@@ -218,7 +198,7 @@ app.post('/registrar-estoque', function (req, res) {
     });
 });
 
- // Remoção de estoque
+  // Remoção de estoque
  app.post('/remover-estoque', function (req, res) {
   let stock_id = req.body.stock;
  
@@ -232,18 +212,73 @@ app.post('/registrar-estoque', function (req, res) {
     });
   });
 
-  // Inativação de fornecedor
- app.post('/atualizar-fornecedor', function (req, res) {
-  console.log(req.body.provider);
-  let provider_id = req.body.provider.cod;
-  let provider_status = req.body.provider.status;
- 
-  if (!provider_id) {
-     return res.status(400).send({ error: true, message: 'Fornecer um id de fornecedor.' }); 
-  }
+ /*
+      ********* INICIO API's VENDA
+ */
 
-  dbConn.query('UPDATE FORNECEDOR SET ATIVO = ? WHERE cod = ?', [provider_status,provider_id], function (error, results, fields) {
-     if (error) throw error;
-     return res.send({ error: false, data: results, msg: 'Fornecedor inativado com sucesso.' });
+ // Efetua venda de produto  
+ app.post('/efetuar-venda', function (req, res) {
+     let requestParams = JSON.parse(req.body.data);
+
+     if (!requestParams) {
+       return res.status(400).send({ error:true, message: 'Please provide user' });
+     }
+
+     var movimento = {};
+     movimento["DESCRICAO"] = "Venda de produtos";
+     movimento["VALOR_TOTAL"] = requestParams.valor;
+     movimento["DATA"] = new Date();
+     movimento["TIPO"] = 0;
+
+    dbConn.query("INSERT INTO MOVIMENTO SET ? ", movimento, function (error, results, fields) {
+      if (error) throw error;
     });
-  });
+
+    if(requestParams.produtos) {
+      for(var i = 0; i < requestParams.produtos.length; i++) { 
+        let newQtd = requestParams.produtos[i].qtd_disponivel - requestParams.produtos[i].qtd;
+        
+        console.log(newQtd);
+
+        dbConn.query("UPDATE ESTOQUE set QTD =  ? WHERE COD_PRODUTO = ?", [newQtd, requestParams.produtos[i].cod], function (error, results, fields) {
+          if (error) throw error;
+        });
+      }
+    }
+
+    return res.send({ error: false, data: {}, msg: 'Venda realizada com sucesso.' });
+ });
+
+/*
+      ********* INICIO API's CAIXA
+ */
+
+ // Insere um movimento no caixa
+ app.post('/movimento', function (req, res) {
+     let movimento = JSON.parse(req.body.data);
+
+     if (!movimento) {
+       return res.status(400).send({ error:true, message: 'Please provide user' });
+     }
+
+    var param = {};
+    param["VALOR_TOTAL"] = movimento.valor;
+    param["DATA"] = new Date();
+    param["TIPO"] = movimento.tipo;
+    param["DESCRICAO"] = movimento.descricao;
+
+    dbConn.query("INSERT INTO MOVIMENTO SET ? ", param, function (error, results, fields) {
+      if (error) throw error;
+        return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
+      });
+ });
+
+   // Lista movimentos do caixa
+ app.get('/listar-movimentos', function (req, res) {
+     dbConn.query('SELECT * FROM MOVIMENTO m', function (error, results, fields) {
+         if (error) throw error;
+         return res.send({ error: false, data: results, message: 'users list.' });
+     });
+ });
+
+  
