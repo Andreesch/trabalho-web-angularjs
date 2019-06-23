@@ -87,8 +87,14 @@ edServices.factory('CadastrarFornecedor', ['$resource', function(resource) {
 	});
 }]);
 
+edServices.factory('RegistrarMovimento', ['$resource', function(resource) {
+	return resource(domainURL + '/movimento', {data: '@data'}, {
+		post: { method:'POST'}
+	});
+}]);
+
 edServices.factory('CarregarMovimentos', ['$resource', function(resource) {
-	return resource(domainURL + '/listar-movimentos.php', null, {
+	return resource(domainURL + '/listar-movimentos', null, {
 		get: { method:'GET'}
 	});
 }]);

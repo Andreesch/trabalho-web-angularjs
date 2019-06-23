@@ -33,8 +33,9 @@
                                     <td data-title="'Nome'">
                                         <span>{{ w.name }}</span>
                                     </td>
-                                    <td data-title="'Total vendido'">
-                                        <span>{{ w.dueValue | currency : "R$ " : 2 }}</span>
+                                    <td data-title="'Status'">
+                                        <span ng-if="w.active">Ativo</span>
+                                        <span ng-if="!w.active">Inativo</span>
                                     </td>
                                 </tr>
                             </table>
