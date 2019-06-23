@@ -75,7 +75,7 @@
 
  // Retrieve all users 
  app.get('/produtos', function (req, res) {
-     dbConn.query('SELECT p.*, e.QTD FROM PRODUTO p JOIN ESTOQUE e ON e.COD_PRODUTO = p.COD', function (error, results, fields) {
+     dbConn.query('SELECT p.*, e.QTD FROM PRODUTO p LEFT JOIN ESTOQUE e ON e.COD_PRODUTO = p.COD', function (error, results, fields) {
          if (error) throw error;
          return res.send({ error: false, data: results, message: 'users list.' });
      });
@@ -105,7 +105,7 @@
 
  // Retrieve all users 
  app.get('/fornecedores', function (req, res) {
-     dbConn.query('SELECT * FROM FORNECEDOR WHERE ATIVO = 1', function (error, results, fields) {
+     dbConn.query('SELECT * FROM FORNECEDOR', function (error, results, fields) {
          if (error) throw error;
          return res.send({ error: false, data: results, message: 'lista de fornecedores' });
      });

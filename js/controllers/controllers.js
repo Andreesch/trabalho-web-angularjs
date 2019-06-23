@@ -380,12 +380,16 @@ appModule
                     swal("Não foi possível carregar a lista de fornecedores!");
                 } else {
                     scope.providersList = [];
-                    angular.forEach(data.data, function(produto) {
+                    angular.forEach(data.data, function(fornecedor) {
+                        if (fornecedor["ATIVO"] == 0) {
+                            return;
+                        }
+
                         var novo = {
-                            cod: produto["COD"],
-                            name: produto["NOME"],
-                            dueValue: produto["TOTAL"],
-                            active: produto["ATIVO"]
+                            cod: fornecedor["COD"],
+                            name: fornecedor["NOME"],
+                            dueValue: fornecedor["TOTAL"],
+                            active: fornecedor["ATIVO"]
                         }
                         scope.providersList.push(novo);
                     });
@@ -432,6 +436,49 @@ appModule
 
         carregarProdutos();
 
+        // var pieData = [
+        //             {data: 1, color: '#F44336', label: 'Toyota'},
+        //             {data: 2, color: '#03A9F4', label: 'Nissan'},
+        //             {data: 3, color: '#8BC34A', label: 'Hyundai'},
+        //             {data: 4, color: '#FFEB3B', label: 'Scion'},
+        //             {data: 4, color: '#009688', label: 'Daihatsu'},
+        // ];
+
+        // if($('#donut-chart')[0]){
+        //             $.plot('#donut-chart', pieData, {
+        //                 series: {
+        //                     pie: {
+        //                         innerRadius: 0.5,
+        //                         show: true,
+        //                         stroke: { 
+        //                             width: 2,
+        //                         },
+        //                     },
+        //                 },
+        //                 legend: {
+        //                     container: '.flc-donut',
+        //                     backgroundOpacity: 0.5,
+        //                     noColumns: 0,
+        //                     backgroundColor: "white",
+        //                     lineWidth: 0
+        //                 },
+        //                 grid: {
+        //                     hoverable: true,
+        //                     clickable: true
+        //                 },
+        //                 tooltip: true,
+        //                 tooltipOpts: {
+        //                     content: "%p.0%, %s", // show percentages, rounding to 2 decimal places
+        //                     shifts: {
+        //                         x: 20,
+        //                         y: 0
+        //                     },
+        //                     defaultTheme: false,
+        //                     cssClass: 'flot-tooltip'
+        //                 }
+
+        //             });
+        //         }
     }])
 
     .controller('cash-controller', ['ngTableParams', '$scope', '$rootScope', '$location', 'CarregarMovimentos', 'RegistrarMovimento', function(ngTableParams, scope, rootScope, location, carregarMovimentos, registrarMovimento) {
